@@ -23,13 +23,13 @@ Referensi:
 
 ### Solution Statements
 
-- Menggunakan algoritma klasifikasi seperti Random Forest dan XGBoost untuk membandingkan performa model.
+- Menggunakan dan membandingkan 4 algoritma klasifikasi seperti XGBoost, Random Forest, Support Vector Machine, dan Naibve Bayes untuk membandingkan performa model.
 - Menerapkan SMOTE (Synthetic Minority Oversampling Technique) untuk menangani ketidakseimbangan kelas pada data pelatihan.
 - Mengukur performa model dengan metrik klasifikasi seperti F1 Score, Precision, dan Recall.
 
 ## Data Understanding
 
-Dataset yang digunakan dalam proyek ini berasal dari platform pembelajaran internal dan telah disesuaikan khusus untuk keperluan pembelajaran Machine Learning. Dataset ini memuat informasi penting terkait calon peminjam, seperti Age, Gender, Education Level, Marital Status, Income, Credit Score, Loan Amount, Loan Purpose, Employment Status, Years at Current Job, Payment History, Debt-to-Income Ratio, Assets Value, Number of Dependents, City, State, Country, Previous Defaults, Marital Status Change, serta label target berupa Risk Rating. Data ini mencerminkan berbagai aspek demografis dan finansial calon peminjam, yang sangat relevan untuk membangun model prediktif dalam konteks risiko peminjaman. Data diambil dari Kaggle (https://www.kaggle.com/datasets/preethamgouda/financial-risk)
+Dataset yang digunakan dalam proyek ini berasal dari platform pembelajaran internal dan telah disesuaikan khusus untuk keperluan pembelajaran Machine Learning. Dataset ini memuat informasi penting terkait calon peminjam, seperti Age, Gender, Education Level, Marital Status, Income, Credit Score, Loan Amount, Loan Purpose, Employment Status, Years at Current Job, Payment History, Debt-to-Income Ratio, Assets Value, Number of Dependents, City, State, Country, Previous Defaults, Marital Status Change, serta label target berupa Risk Rating. Data ini mencerminkan berbagai aspek demografis dan finansial calon peminjam, yang sangat relevan untuk membangun model prediktif dalam konteks risiko peminjaman. Data diambil dari Kaggle (https://www.kaggle.com/datasets/preethamgouda/financial-risk) yang diunggah oleh Preetham Gouda. Dataset ini berjumlah 15000 baris.
 
 ### Variabel-variabel dalam dataset antara lain:
 
