@@ -80,7 +80,7 @@ Visualisasi eksploratif dilakukan untuk memahami pola data, seperti:
   ![1748527638971](image/READme/1748527638971.png)
   Hasil matriks korelasi tersebut menunjukkan bahwa semua fitur numerik dalam dataset memiliki korelasi yang sangat rendah atau hampir nol satu sama lain, dengan nilai korelasi berkisar sangat dekat dengan 0 kecuali diagonal utama yang bernilai 1 (korelasi sempurna dengan dirinya sendiri). Ini mengindikasikan bahwa tidak ada hubungan linear yang kuat atau signifikan antara variabel-variabel seperti usia, pendapatan, skor kredit, jumlah pinjaman, lama bekerja, rasio utang terhadap pendapatan, nilai aset, jumlah tanggungan, riwayat default, dan perubahan status pernikahan dalam data tersebut. Dengan kata lain, fitur-fitur ini cenderung independen secara linear satu sama lain.
 - **Risk Rating Distribution**
-  ![1748679858860](image/READme/1748679858860.png)
+  ![Risk Rating](image-2.png)
   Grafik ini menunjukkan distribusi rating risiko dengan tiga kategori: Low, Medium, dan High. Terlihat bahwa mayoritas data berada pada kategori Low dengan jumlah hampir 9.000, diikuti oleh Medium sekitar 4.500, dan kategori High yang paling sedikit dengan jumlah sekitar 1.500. Ini mengindikasikan bahwa sebagian besar entitas dalam dataset memiliki risiko rendah, sementara risiko tinggi jauh lebih jarang terjadi.
 
 ## Data Preparation
