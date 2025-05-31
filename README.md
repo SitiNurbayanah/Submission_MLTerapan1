@@ -71,16 +71,16 @@ Berikut adalah penjelasan seluruh fitur dalam dataset:
 Visualisasi eksploratif dilakukan untuk memahami pola data, seperti:
 
 - **Boxplot** antara Credit Score dan Risk Rating  
-  ![1748527612782](image/READme/1748527612782.png)
+  ![1748527612782](image/READme/1748527612782.png)  
   Boxplot ini menunjukkan distribusi skor kredit (Credit Score) berdasarkan kategori risiko (Risk Rating) Low, Medium, dan High. Dari grafik terlihat bahwa rentang nilai skor kredit untuk ketiga kategori risiko tersebut hampir sama, dengan median sekitar 700 dan rentang antara 600 sampai 800. Hal ini mengindikasikan bahwa skor kredit saja tidak terlalu membedakan ketiga tingkat risiko secara signifikan dalam data ini.
 - **Countplot** distribusi Risk Rating dan Employment Status  
-  ![1748527628890](image/READme/1748527628890.png)
+  ![1748527628890](image/READme/1748527628890.png)  
   Grafik ini menampilkan grafik batang yang menggambarkan hubungan antara status pekerjaan dan tingkat penilaian risiko. Grafik menunjukkan bahwa sebagian besar individu—baik yang menganggur, bekerja, maupun wiraswasta—berada dalam kategori risiko rendah, dengan jumlah sekitar 3000 orang per status pekerjaan. Sementara itu, jumlahnya menurun pada kategori risiko sedang dan semakin berkurang pada kategori risiko tinggi, masing-masing sekitar 1500 dan 500 orang. Informasi dalam grafik ini bisa membantu memahami keterkaitan antara tingkat risiko dan kondisi ketenagakerjaan dalam suatu populasi.
 - **Heatmap** korelasi antar fitur numerik  
-  ![1748527638971](image/READme/1748527638971.png)
+  ![1748527638971](image/READme/1748527638971.png)  
   Hasil matriks korelasi tersebut menunjukkan bahwa semua fitur numerik dalam dataset memiliki korelasi yang sangat rendah atau hampir nol satu sama lain, dengan nilai korelasi berkisar sangat dekat dengan 0 kecuali diagonal utama yang bernilai 1 (korelasi sempurna dengan dirinya sendiri). Ini mengindikasikan bahwa tidak ada hubungan linear yang kuat atau signifikan antara variabel-variabel seperti usia, pendapatan, skor kredit, jumlah pinjaman, lama bekerja, rasio utang terhadap pendapatan, nilai aset, jumlah tanggungan, riwayat default, dan perubahan status pernikahan dalam data tersebut. Dengan kata lain, fitur-fitur ini cenderung independen secara linear satu sama lain.
 - **Distribusi** Risk Rating  
-  ![1748680485329](image/READme/1748680485329.png)
+  ![1748680485329](image/READme/1748680485329.png)  
   Grafik ini menunjukkan distribusi rating risiko dengan tiga kategori: Low, Medium, dan High. Terlihat bahwa mayoritas data berada pada kategori Low dengan jumlah hampir 9.000, diikuti oleh Medium sekitar 4.500, dan kategori High yang paling sedikit dengan jumlah sekitar 1.500. Ini mengindikasikan bahwa sebagian besar entitas dalam dataset memiliki risiko rendah, sementara risiko tinggi jauh lebih jarang terjadi.
 
 ## Data Preparation
@@ -90,7 +90,7 @@ Tahapan yang dilakukan:
 1. **Penanganan Missing Values:**
 
    - Kolom numerik seperti `Income`, `Credit Score`, dan `Loan Amount` diimputasi menggunakan strategi median.
-    Memberikan hasil
+    Memberikan hasil:  
 ![image](https://github.com/user-attachments/assets/b9f61144-d1b2-42f8-81c2-0da2cb4f6a77)
 
 2. **Encoding:**
@@ -194,8 +194,8 @@ Model XGBoost dipilih karena memberikan hasil evaluasi yang lebih baik pada data
 
 Selanjutnya adalah melakukan testing dengan data baru. Pada testing, kode akan memproses dan memprediksi status pinjaman dari tiga data calon peminjam menggunakan empat model Machine Learning: **XGBoost**, **Random Forest**, **Support Vector Machine (SVM)**, dan **Naive Bayes**, yang telah dilatih sebelumnya. Data baru berupa informasi demografis dan keuangan seperti usia, pendapatan, nilai aset, skor kredit, dan status pekerjaan. Pertama, fitur kategorikal seperti *Gender* dan *Education Level* diubah menjadi angka menggunakan `LabelEncoder` yang sama saat training, dengan penanganan nilai yang belum pernah dilihat (`else -1`). Fitur numerik seperti *Income* dan *Loan Amount* distandarisasi menggunakan `StandardScaler` agar sesuai dengan distribusi data latih. Data yang telah diproses kemudian diurutkan mengikuti struktur fitur saat training (`X.columns`). Model XGBoost diprediksi menggunakan parameter default atau yang telah dituning sebelumnya (misalnya, `n_estimators`, `learning_rate`, dan `max_depth`), Random Forest kemungkinan menggunakan parameter seperti jumlah pohon (`n_estimators`) dan kedalaman maksimum pohon (`max_depth`), SVM menggunakan kernel tertentu (biasanya `'rbf'` atau `'linear'`), dan Naive Bayes menggunakan distribusi Gaussian karena data numerik. Output berupa prediksi label dari masing-masing model, yang ditambahkan sebagai kolom baru (`XGB Prediction`, `RF Prediction`, dll.) ke dalam dataframe untuk memudahkan perbandingan antar model.
 
-Hasil testing menghasilkan output sebagai berikut:
+Hasil testing menghasilkan output sebagai berikut:  
 
-![image](https://github.com/user-attachments/assets/1e6b33c5-6d62-4dbf-a1fe-8d3a096d7059)
+![image](https://github.com/user-attachments/assets/1e6b33c5-6d62-4dbf-a1fe-8d3a096d7059)  
 
 Hasil prediksi menunjukkan bahwa model **XGBoost** dan **Random Forest** konsisten memprediksi ketiga peminjam memiliki risiko pinjaman **"Low"**, yang mengindikasikan model ini menilai profil keuangan dan histori mereka cukup layak untuk pinjaman. Sebaliknya, model **SVM** secara keseluruhan memprediksi ketiganya sebagai **"High"** risk, kemungkinan karena sensitivitas SVM terhadap distribusi data yang membuatnya lebih konservatif terhadap variasi tertentu. Sementara itu, model **Naive Bayes** menghasilkan prediksi yang lebih bervariasi: satu peminjam diprediksi **"Medium"** dan dua lainnya **"Low"**, menunjukkan model ini lebih dipengaruhi oleh probabilitas fitur-fitur tertentu secara independen. Perbedaan ini mencerminkan bagaimana masing-masing algoritma menangani kompleksitas dan interaksi fitur dalam menentukan tingkat risiko pinjaman.
