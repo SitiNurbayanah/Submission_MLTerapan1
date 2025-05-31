@@ -36,9 +36,11 @@ Dataset yang digunakan dalam proyek ini berasal dari platform Kaggle, diunggah o
 Berdasarkan eksplorasi awal pada dataset (`.info()` dan `.isna().sum()`), ditemukan kondisi berikut:
 
 - **Missing values** terdapat pada kolom-kolom:
-  - `Income`: 371 data kosong
-  - `Credit Score`: 198 data kosong
-  - `Loan Amount`: 115 data kosong
+  - Income                   2250
+  - Credit Score             2250
+  - Loan Amount              2250
+  - Assets Value             2250
+  - Number of Dependents     2250
 - **Data duplikat**: Tidak ditemukan data duplikat (`df.duplicated().sum() = 0`)
 
 ### Deskripsi Variabel
@@ -89,7 +91,7 @@ Tahapan yang dilakukan:
 
 1. **Penanganan Missing Values:**
 
-   - Kolom numerik seperti `Income`, `Credit Score`, dan `Loan Amount` diimputasi menggunakan strategi median.
+   - Kolom numerik seperti Income, Credit Score, Loan Amount, Assets Value, Number of Dependents, dan Previous Defaults diimputasi menggunakan strategi median.
     Memberikan hasil:  
 ![image](https://github.com/user-attachments/assets/b9f61144-d1b2-42f8-81c2-0da2cb4f6a77)
 
@@ -128,9 +130,11 @@ Random Forest adalah model berbasis ensemble yang membangun banyak pohon keputus
 
 **Parameter Utama:**
 
-- `n_estimators=100`: Jumlah pohon dalam hutan.
-- `max_depth=10`: Maksimum kedalaman pohon.
-- `random_state=42`: Untuk reprodusibilitas hasil.
+- n_estimators=200,
+- max_depth=10,
+- min_samples_leaf=5
+- class_weight='balanced'
+- random_state=42
 
 ### 2. XGBoost Classifier
 
@@ -139,11 +143,10 @@ XGBoost adalah model boosting berbasis pohon yang membangun model secara bertaha
 
 **Parameter Utama:**
 
-- `n_estimators=100`
-- `max_depth=6`
-- `learning_rate=0.1`
-- `eval_metric='mlogloss'`
-- `random_state=42`
+- class_weight='balanced'
+- eval_metric='mlogloss'
+- random_state=42
+- sample_weight=sample_weights
 
 ### 3. Support Vector Machine (SVM)
 
@@ -152,9 +155,10 @@ SVM bekerja dengan mencari hyperplane optimal yang memisahkan kelas dalam ruang 
 
 **Parameter Utama:**
 
-- `kernel='rbf'`: Menggunakan kernel radial basis function.
-- `C=1.0`: Parameter regularisasi.
-- `gamma='scale'`: Koefisien kernel RBF.
+- kernel='rbf'
+- C=1
+- decision_function_shape='ovr'
+- probability=True
 
 ### 4. Naive Bayes (GaussianNB)
 
@@ -163,7 +167,7 @@ Model ini mengasumsikan bahwa fitur bersifat independen dan mengikuti distribusi
 
 **Parameter Utama:**
 
-- Menggunakan parameter default dari `GaussianNB()`.
+- Menggunakan parameter default dari GaussianNB().
 
 Model terbaik dipilih berdasarkan nilai akurasi pada data uji.
 
