@@ -29,33 +29,52 @@ Referensi:
 
 ## Data Understanding
 
-Dataset yang digunakan dalam proyek ini berasal dari platform pembelajaran internal dan telah disesuaikan khusus untuk keperluan pembelajaran Machine Learning. Dataset ini memuat informasi penting terkait calon peminjam, seperti Age, Gender, Education Level, Marital Status, Income, Credit Score, Loan Amount, Loan Purpose, Employment Status, Years at Current Job, Payment History, Debt-to-Income Ratio, Assets Value, Number of Dependents, City, State, Country, Previous Defaults, Marital Status Change, serta label target berupa Risk Rating. Data ini mencerminkan berbagai aspek demografis dan finansial calon peminjam, yang sangat relevan untuk membangun model prediktif dalam konteks risiko peminjaman. Data diambil dari Kaggle (https://www.kaggle.com/datasets/preethamgouda/financial-risk) yang diunggah oleh Preetham Gouda. Dataset ini berjumlah 15000 baris.
+Dataset yang digunakan dalam proyek ini berasal dari platform Kaggle, diunggah oleh Preetham Gouda (https://www.kaggle.com/datasets/preethamgouda/financial-risk). Dataset ini memiliki **15.000 baris dan 20 kolom**, berisi informasi calon peminjam yang relevan untuk sistem pemeringkatan risiko keuangan.
 
-### Variabel-variabel dalam dataset antara lain:
+### Kondisi Awal Data
 
-- Gender: Jenis kelamin peminjam
-- Age: Usia peminjam
-- Education Level: Tingkat pendidikan
-- Marital Status: Status pernikahan
-- Employment Status: Status pekerjaan
-- Income: Pendapatan
-- Credit Score: Skor kredit
-- Loan Amount: Jumlah pinjaman
-- Loan Purpose: Tujuan pinjaman
-- Debt-to-Income Ratio: Rasio utang terhadap pendapatan
-- Assets Value: Nilai aset
-- Number of Dependents: Jumlah tanggungan
-- Previous Defaults: Riwayat gagal bayar sebelumnya
-- Payment History: Riwayat pembayaran
-- Risk Rating: Target klasifikasi (rendah, sedang, tinggi, dll)
+Berdasarkan eksplorasi awal pada dataset (`.info()` dan `.isna().sum()`), ditemukan kondisi berikut:
 
-EDA dilakukan dengan visualisasi seperti:
+- **Missing values** terdapat pada kolom-kolom:
+  - `Income`: 371 data kosong
+  - `Credit Score`: 198 data kosong
+  - `Loan Amount`: 115 data kosong
+- **Data duplikat**: Tidak ditemukan data duplikat (`df.duplicated().sum() = 0`)
 
-- Boxplot antara Credit Score dan Risk Rating
+### Deskripsi Variabel
+
+Berikut adalah penjelasan seluruh fitur dalam dataset:
+
+- **Gender**: Jenis kelamin peminjam (`Male`, `Female`)
+- **Age**: Usia peminjam (numerik)
+- **Education Level**: Tingkat pendidikan terakhir (kategorikal: `High School`, `Bachelor`, dll.)
+- **Marital Status**: Status pernikahan peminjam (`Single`, `Married`, dll.)
+- **Employment Status**: Status pekerjaan (`Employed`, `Self-employed`, dll.)
+- **Income**: Total pendapatan tahunan (numerik, dalam satuan USD)
+- **Credit Score**: Skor kredit (numerik)
+- **Loan Amount**: Jumlah pinjaman yang diajukan (numerik)
+- **Loan Purpose**: Tujuan dari pengajuan pinjaman (`Home`, `Car`, `Business`, dll.)
+- **Debt-to-Income Ratio**: Rasio antara utang dan pendapatan (numerik)
+- **Assets Value**: Total nilai aset (numerik)
+- **Number of Dependents**: Jumlah tanggungan keluarga (numerik)
+- **Previous Defaults**: Jumlah riwayat gagal bayar sebelumnya (numerik)
+- **Payment History**: Riwayat keterlambatan pembayaran (numerik)
+- **Years at Current Job**: Lama bekerja pada pekerjaan saat ini (dalam tahun)
+- **City**: Kota tempat tinggal peminjam
+- **State**: Negara bagian tempat tinggal
+- **Country**: Negara tempat tinggal
+- **Marital Status Change**: Perubahan status pernikahan (misal `Yes` jika pernah berubah)
+- **Risk Rating**: Label target klasifikasi risiko (`Low`, `Medium`, `High`), kemudian diencode sebagai 0, 1, 2
+
+### EDA Visualisasi
+
+Visualisasi eksploratif dilakukan untuk memahami pola data, seperti:
+
+- **Boxplot** antara Credit Score dan Risk Rating  
   ![1748527612782](image/READme/1748527612782.png)
-- Countplot distribusi Risk Rating dan Employment Status
+- **Countplot** distribusi Risk Rating dan Employment Status  
   ![1748527628890](image/READme/1748527628890.png)
-- Heatmap korelasi antar fitur numerik
+- **Heatmap** korelasi antar fitur numerik  
   ![1748527638971](image/READme/1748527638971.png)
 
 ## Data Preparation
@@ -82,14 +101,53 @@ Tahapan yang dilakukan:
 
 ## Modeling
 
-Model yang digunakan:
+Dalam proyek ini, empat algoritma klasifikasi digunakan dan dibandingkan untuk memprediksi `Risk Rating`. Berikut adalah deskripsi cara kerja masing-masing algoritma beserta parameter yang digunakan:
 
-- **Random Forest Classifier**
-- **XGBoost Classifier**
-- **Support Vector Machine**
-- **Naive Bayes**
+### 1. Random Forest Classifier
 
-Model terbaik dipilih berdasarkan nilai F1 Score dan akurasi keseluruhan di data uji.
+**Cara Kerja:**  
+Random Forest adalah model berbasis ensemble yang membangun banyak pohon keputusan (decision trees) selama pelatihan dan menggabungkan hasilnya untuk meningkatkan akurasi prediksi dan mengurangi overfitting. Setiap pohon dilatih pada subset data dan subset fitur secara acak.
+
+**Parameter Utama:**
+
+- `n_estimators=100`: Jumlah pohon dalam hutan.
+- `max_depth=10`: Maksimum kedalaman pohon.
+- `random_state=42`: Untuk reprodusibilitas hasil.
+
+### 2. XGBoost Classifier
+
+**Cara Kerja:**  
+XGBoost adalah model boosting berbasis pohon yang membangun model secara bertahap dengan meminimalkan kesalahan model sebelumnya. XGBoost menggunakan regularisasi untuk menghindari overfitting.
+
+**Parameter Utama:**
+
+- `n_estimators=100`
+- `max_depth=6`
+- `learning_rate=0.1`
+- `eval_metric='mlogloss'`
+- `random_state=42`
+
+### 3. Support Vector Machine (SVM)
+
+**Cara Kerja:**  
+SVM bekerja dengan mencari hyperplane optimal yang memisahkan kelas dalam ruang fitur. Untuk data non-linear, kernel trick digunakan untuk memproyeksikan data ke dimensi lebih tinggi agar dapat dipisahkan.
+
+**Parameter Utama:**
+
+- `kernel='rbf'`: Menggunakan kernel radial basis function.
+- `C=1.0`: Parameter regularisasi.
+- `gamma='scale'`: Koefisien kernel RBF.
+
+### 4. Naive Bayes (GaussianNB)
+
+**Cara Kerja:**  
+Model ini mengasumsikan bahwa fitur bersifat independen dan mengikuti distribusi normal. Meskipun sederhana, model ini efektif dalam klasifikasi berbasis probabilistik.
+
+**Parameter Utama:**
+
+- Menggunakan parameter default dari `GaussianNB()`.
+
+Model terbaik dipilih berdasarkan nilai akurasi pada data uji.
 
 ## Evaluation
 
