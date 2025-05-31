@@ -91,14 +91,7 @@ Tahapan yang dilakukan:
 
    - Kolom numerik seperti `Income`, `Credit Score`, dan `Loan Amount` diimputasi menggunakan strategi median.
     Memberikan hasil
-Income                  0
-Credit Score            0
-Loan Amount             0
-Assets Value            0
-Number of Dependents    0
-Previous Defaults       0
-dtype: int64
-Hasil dari imputasi menunjukan bahwa missing value pada kolom yang diimputasi sudah tidak ada.
+![image](https://github.com/user-attachments/assets/b9f61144-d1b2-42f8-81c2-0da2cb4f6a77)
 
 2. **Encoding:**
 
@@ -203,9 +196,6 @@ Selanjutnya adalah melakukan testing dengan data baru. Pada testing, kode akan m
 
 Hasil testing menghasilkan output sebagai berikut:
 
-XGB Prediction RF Prediction SVM Prediction NB Prediction
-0            Low           Low           High        Medium
-1            Low           Low           High           Low
-2            Low           Low           High           Low
+![image](https://github.com/user-attachments/assets/1e6b33c5-6d62-4dbf-a1fe-8d3a096d7059)
 
 Hasil prediksi menunjukkan bahwa model **XGBoost** dan **Random Forest** konsisten memprediksi ketiga peminjam memiliki risiko pinjaman **"Low"**, yang mengindikasikan model ini menilai profil keuangan dan histori mereka cukup layak untuk pinjaman. Sebaliknya, model **SVM** secara keseluruhan memprediksi ketiganya sebagai **"High"** risk, kemungkinan karena sensitivitas SVM terhadap distribusi data yang membuatnya lebih konservatif terhadap variasi tertentu. Sementara itu, model **Naive Bayes** menghasilkan prediksi yang lebih bervariasi: satu peminjam diprediksi **"Medium"** dan dua lainnya **"Low"**, menunjukkan model ini lebih dipengaruhi oleh probabilitas fitur-fitur tertentu secara independen. Perbedaan ini mencerminkan bagaimana masing-masing algoritma menangani kompleksitas dan interaksi fitur dalam menentukan tingkat risiko pinjaman.
