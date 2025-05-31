@@ -90,20 +90,39 @@ Tahapan yang dilakukan:
 1. **Penanganan Missing Values:**
 
    - Kolom numerik seperti `Income`, `Credit Score`, dan `Loan Amount` diimputasi menggunakan strategi median.
+    Memberikan hasil
+Income                  0
+Credit Score            0
+Loan Amount             0
+Assets Value            0
+Number of Dependents    0
+Previous Defaults       0
+dtype: int64
+Hasil dari imputasi menunjukan bahwa missing value pada kolom yang diimputasi sudah tidak ada.
 
 2. **Encoding:**
 
-   - Kolom kategorikal diencode menggunakan LabelEncoder.
+   - Kolom kategorikal diencode menggunakan LabelEncoder hal ini digunakan untuk merepresentasikan kolom kategorikal kde dalam angka, ini dilakukan agar dapat memudahkan pemodelan.
    - Kolom target `Risk Rating` juga diencode untuk keperluan klasifikasi.
+   - Gambaran encoding:
+    * `categorical_cols`: daftar kolom kategorikal yang akan dikodekan.
+    * `LabelEncoder()` dari `sklearn.preprocessing` digunakan untuk mengubah setiap nilai unik pada kolom menjadi angka integer (misalnya: `Male` jadi `1`, `Female` jadi `0`).
+    * `le.fit_transform(df[col].astype(str))`: memastikan semua nilai berupa string (menghindari error jika ada `NaN`) lalu mengubahnya jadi angka.
+    * `label_encoders[col] = le`: menyimpan encoder untuk setiap kolom jika nanti perlu *inverse transform* (mengembalikan ke bentuk aslinya).
+    * Target kolom `Risk Rating` juga diencode dengan encoder tersendiri (`le_target`).
 
 3. **Feature Scaling:**
 
-   - Kolom numerik dinormalisasi menggunakan MinMaxScaler agar berada dalam rentang 0-1.
+   - Sama halnya dengan kolom kategorikan, kolom numerikal juga harus dilakukan normalisasi. Normalisasi kolom numarik akan dilakukan menggunakan **MinMaxScaler** dari `sklearn.preprocessing`, yang mengubah nilai dalam setiap kolom numerik ke rentang antara **0 dan 1**. Berikut gambarannya:
+      * `numeric_cols`: daftar nama kolom numerik yang akan dinormalisasi.
+      * `MinMaxScaler()` membuat objek scaler yang akan menghitung nilai minimum dan maksimum tiap kolom.
+      * `scaler.fit_transform(...)`: menghitung min dan max.
+      * `df[numeric_cols] = ...`: hasil normalisasi ditimpa kembali ke DataFrame `df` pada kolom-kolom tersebut.
+      * `print(df.head())`: menampilkan 5 baris pertama untuk memverifikasi hasil scaling.
 
 4. **Train-Test Split dan SMOTE:**
 
-   - Data dibagi dengan proporsi 80:20.
-   - SMOTE diterapkan pada training set untuk menyeimbangkan kelas minoritas dan mayoritas.
+   - Selanjutnya adalah splitting data. Di tahap ini kita kita memisahkan fitur `X` dan target `y` dari dataset, lalu membagi data menjadi 80% training dan 20% testing dengan `random_state=42` dan `stratify=y` agar distribusi kelas target seimbang. Selanjutnya, menggunakan SMOTE (`random_state=42`) untuk melakukan oversampling pada data training sehingga kelas minoritas diperbanyak secara sintetis agar model tidak bias terhadap kelas mayoritas.
 
 ## Modeling
 
@@ -177,3 +196,16 @@ Dari hasil evaluasi keempat model pada data uji, terlihat perbedaan performa yan
 **Kesimpulan:**
 Model XGBoost menunjukkan performa terbaik dalam mengenali kelas mayoritas (kelas 1), tapi semua model masih mengalami kesulitan signifikan dalam mengklasifikasikan kelas minoritas (kelas 0 dan 2), yang mungkin disebabkan oleh ketidakseimbangan data atau fitur yang kurang informatif. SVM tampaknya tidak cocok dengan distribusi data ini karena akurasi dan recall kelas mayoritas sangat rendah. Perlu usaha lebih lanjut seperti tuning hyperparameter, teknik penyeimbangan data yang lebih efektif, atau fitur engineering untuk meningkatkan performa model terutama pada kelas minoritas.
 Model XGBoost dipilih karena memberikan hasil evaluasi yang lebih baik pada data uji dan mampu menangani ketidakseimbangan kelas dengan baik.
+
+## Testing dengan Data Baru
+
+Selanjutnya adalah melakukan testing dengan data baru. Pada testing, kode akan memproses dan memprediksi status pinjaman dari tiga data calon peminjam menggunakan empat model Machine Learning: **XGBoost**, **Random Forest**, **Support Vector Machine (SVM)**, dan **Naive Bayes**, yang telah dilatih sebelumnya. Data baru berupa informasi demografis dan keuangan seperti usia, pendapatan, nilai aset, skor kredit, dan status pekerjaan. Pertama, fitur kategorikal seperti *Gender* dan *Education Level* diubah menjadi angka menggunakan `LabelEncoder` yang sama saat training, dengan penanganan nilai yang belum pernah dilihat (`else -1`). Fitur numerik seperti *Income* dan *Loan Amount* distandarisasi menggunakan `StandardScaler` agar sesuai dengan distribusi data latih. Data yang telah diproses kemudian diurutkan mengikuti struktur fitur saat training (`X.columns`). Model XGBoost diprediksi menggunakan parameter default atau yang telah dituning sebelumnya (misalnya, `n_estimators`, `learning_rate`, dan `max_depth`), Random Forest kemungkinan menggunakan parameter seperti jumlah pohon (`n_estimators`) dan kedalaman maksimum pohon (`max_depth`), SVM menggunakan kernel tertentu (biasanya `'rbf'` atau `'linear'`), dan Naive Bayes menggunakan distribusi Gaussian karena data numerik. Output berupa prediksi label dari masing-masing model, yang ditambahkan sebagai kolom baru (`XGB Prediction`, `RF Prediction`, dll.) ke dalam dataframe untuk memudahkan perbandingan antar model.
+
+Hasil testing menghasilkan output sebagai berikut:
+
+XGB Prediction RF Prediction SVM Prediction NB Prediction
+0            Low           Low           High        Medium
+1            Low           Low           High           Low
+2            Low           Low           High           Low
+
+Hasil prediksi menunjukkan bahwa model **XGBoost** dan **Random Forest** konsisten memprediksi ketiga peminjam memiliki risiko pinjaman **"Low"**, yang mengindikasikan model ini menilai profil keuangan dan histori mereka cukup layak untuk pinjaman. Sebaliknya, model **SVM** secara keseluruhan memprediksi ketiganya sebagai **"High"** risk, kemungkinan karena sensitivitas SVM terhadap distribusi data yang membuatnya lebih konservatif terhadap variasi tertentu. Sementara itu, model **Naive Bayes** menghasilkan prediksi yang lebih bervariasi: satu peminjam diprediksi **"Medium"** dan dua lainnya **"Low"**, menunjukkan model ini lebih dipengaruhi oleh probabilitas fitur-fitur tertentu secara independen. Perbedaan ini mencerminkan bagaimana masing-masing algoritma menangani kompleksitas dan interaksi fitur dalam menentukan tingkat risiko pinjaman.
