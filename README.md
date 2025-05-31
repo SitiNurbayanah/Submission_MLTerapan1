@@ -60,12 +60,12 @@ Berikut adalah penjelasan seluruh fitur dalam dataset:
 - **Assets Value**: Total nilai aset (numerik)
 - **Number of Dependents**: Jumlah tanggungan keluarga (numerik)
 - **Previous Defaults**: Jumlah riwayat gagal bayar sebelumnya (numerik)
-- **Payment History**: Riwayat keterlambatan pembayaran (numerik)
+- **Payment History**: Riwayat keterlambatan pembayaran
 - **Years at Current Job**: Lama bekerja pada pekerjaan saat ini (dalam tahun)
 - **City**: Kota tempat tinggal peminjam
 - **State**: Negara bagian tempat tinggal
 - **Country**: Negara tempat tinggal
-- **Marital Status Change**: Perubahan status pernikahan (misal `Yes` jika pernah berubah)
+- **Marital Status Change**: Perubahan status pernikahan
 - **Risk Rating**: Label target klasifikasi risiko (`Low`, `Medium`, `High`), kemudian diencode sebagai 0, 1, 2
 
 ### EDA Visualisasi
