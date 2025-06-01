@@ -41,6 +41,7 @@ Berdasarkan eksplorasi awal pada dataset (`.info()` dan `.isna().sum()`), ditemu
   - Loan Amount              2250
   - Assets Value             2250
   - Number of Dependents     2250
+  - Previous Defaults        2250
 - **Data duplikat**: Tidak ditemukan data duplikat (`df.duplicated().sum() = 0`)
 
 ### Deskripsi Variabel
